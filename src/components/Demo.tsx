@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import link from '../assets/link.svg';
 import copy from '../assets/copy.svg';
 import loader from '../assets/loader.svg';
+import tick from '../assets/tick.svg';
 import { useLazyGetSummaryQuery } from '../services/article';
 
 type ArticleType = {
@@ -18,6 +19,8 @@ const Demo = () => {
   const [allArticles, setAllArticles] = useState<ArticleType[]>([]);
 
   const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
+
+  const [copied, setCopied] = useState('');
 
   useEffect(() => {
     const articlesFromLocalStorage: ArticleType[] | null = JSON.parse(
@@ -41,6 +44,12 @@ const Demo = () => {
 
       localStorage.setItem('articles', JSON.stringify(updatedAllArticles));
     }
+  };
+
+  const handleCopy = (copyUrl: string) => {
+    setCopied(copyUrl);
+    navigator.clipboard.writeText(copyUrl);
+    setTimeout(() => setCopied(''), 3000);
   };
 
   return (
@@ -77,9 +86,12 @@ const Demo = () => {
               onClick={() => setArticle(article)}
               className="p-3 flex justify-start items-center flex-row bg-white border border-gray-200 gap-3 rounded-lg cursor-pointer"
             >
-              <div className="w-7 h-7 rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur flex justify-center items-center cursor-pointer">
+              <div
+                className="w-7 h-7 rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur flex justify-center items-center cursor-pointer"
+                onClick={() => handleCopy(article.url)}
+              >
                 <img
-                  src={copy}
+                  src={copied === article.url ? tick : copy}
                   alt="copy_icon"
                   className="w-[40%] h-[40%] object-contain"
                 />
