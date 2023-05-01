@@ -1,14 +1,33 @@
 import { useState, useEffect } from 'react';
 import link from '../assets/link.svg';
+import copy from '../assets/copy.svg';
+import loader from '../assets/loader.svg';
 import { useLazyGetSummaryQuery } from '../services/article';
 
+type ArticleType = {
+  url: string;
+  summary: string;
+};
+
 const Demo = () => {
-  const [article, setArticle] = useState({
+  const [article, setArticle] = useState<ArticleType>({
     url: '',
     summary: '',
   });
 
+  const [allArticles, setAllArticles] = useState<ArticleType[]>([]);
+
   const [getSummary, { error, isFetching }] = useLazyGetSummaryQuery();
+
+  useEffect(() => {
+    const articlesFromLocalStorage: ArticleType[] | null = JSON.parse(
+      localStorage.getItem('articles') || '[]'
+    );
+
+    if (articlesFromLocalStorage) {
+      setAllArticles(articlesFromLocalStorage);
+    }
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -16,8 +35,11 @@ const Demo = () => {
 
     if (data?.summary) {
       const newArticle = { ...article, summary: data.summary };
+      const updatedAllArticles = [newArticle, ...allArticles];
+      setAllArticles(updatedAllArticles);
       setArticle(newArticle);
-      console.log(newArticle);
+
+      localStorage.setItem('articles', JSON.stringify(updatedAllArticles));
     }
   };
 
@@ -48,6 +70,56 @@ const Demo = () => {
             →
           </button>
         </form>
+        <div className="flex flex-col gap-1 max-h-60 overflow-y-auto">
+          {allArticles.map((article: ArticleType, index: number) => (
+            <div
+              key={`link-${index}`}
+              onClick={() => setArticle(article)}
+              className="p-3 flex justify-start items-center flex-row bg-white border border-gray-200 gap-3 rounded-lg cursor-pointer"
+            >
+              <div className="w-7 h-7 rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur flex justify-center items-center cursor-pointer">
+                <img
+                  src={copy}
+                  alt="copy_icon"
+                  className="w-[40%] h-[40%] object-contain"
+                />
+              </div>
+              <p className="flex-1 font-satoshi text-blue-700 font-medium text-sm truncate">
+                {article.url}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="my-10 max-w-full flex justify-center items-center">
+        {isFetching ? (
+          <img src={loader} alt="loader" className="w-20 h-20 object-contain" />
+        ) : error ? (
+          <p className="font-inter font-bold text-black text-center">
+            An error has occurred when trying to fetch the summary from our AI.
+            Please try again later.
+            <br />
+            <span className="font-satoshi font-normal text-grey-700">
+              {error?.data?.error}
+            </span>
+          </p>
+        ) : (
+          article.summary && (
+            <div className="flex flex-col gap-3">
+              <h2 className="font-satoshi font-bold text-gray-600 text-xl">
+                Article{' '}
+                <span className="bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 bg-clip-text text-transparent">
+                  Summary
+                </span>
+              </h2>
+              <div className="rounded-xl border border-gray-200 bg-white/20 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur p-4">
+                <p className="font-inter font-medium text-sm text-gray-700">
+                  {article.summary}
+                </p>
+              </div>
+            </div>
+          )
+        )}
       </div>
     </section>
   );
