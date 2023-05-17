@@ -1,11 +1,11 @@
 import Hero from '../components/Hero';
-import Demo from '../components/Demo';
+import Summarizer from '../components/Summarizer';
 
 function Dashboard() {
   return (
     <>
       <Hero />
-      <Demo />
+      <Summarizer />
     </>
   );
 }
