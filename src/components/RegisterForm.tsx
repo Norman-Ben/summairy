@@ -1,8 +1,14 @@
 import { useState, useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { register, reset } from '../services/auth/authSlice';
+import { AppDispatch } from '../services/store';
 import { FaUser } from 'react-icons/fa';
+import { LoadingSpinner } from './LoadingSpinner';
 
 type FormDataTypes = {
-  username: string;
+  name: string;
   email: string;
   password: string;
   confirmPassword: string;
@@ -10,41 +16,64 @@ type FormDataTypes = {
 
 function RegisterForm() {
   const [formData, setFormData] = useState<FormDataTypes>({
-    username: '',
+    name: '',
     email: '',
     password: '',
     confirmPassword: '',
   });
 
   const [formErrors, setFormErrors] = useState({
-    username: '',
+    name: '',
     password: '',
     confirmPassword: '',
   });
 
-  const { username, email, password, confirmPassword } = formData;
+  const { name, email, password, confirmPassword } = formData;
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { isFetching, isSuccess, isError, errorMessage, user } = useSelector(
+    (state: any) => state.auth
+  );
+
+  useEffect(() => {
+    if (isSuccess || user) {
+      dispatch(reset());
+      navigate('/');
+    }
+
+    if (isError) {
+      dispatch(reset());
+      toast.error(errorMessage);
+    }
+  }, [isSuccess, isError, user, errorMessage, dispatch, navigate]);
 
   const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   // Validate username (3-20 characters)
-  const validateUsername = (username: string) => {
-    if (username.length < 3) {
+  const validateUsername = (name: string) => {
+    if (name.length < 3) {
       setFormErrors((errors) => ({
         ...errors,
-        username: 'Name must be at least 3 characters long. Please try again.',
+        name: 'Name must be at least 3 characters long. Please try again.',
       }));
+      toast.error('Name must be at least 3 characters long. Please try again.');
+
       return false;
-    } else if (username.length > 20) {
+    } else if (name.length > 20) {
       setFormErrors((errors) => ({
         ...errors,
-        username:
-          'Name must be less than 20 characters long. Please try again.',
+        name: 'Name must be less than 20 characters long. Please try again.',
       }));
+      toast.error(
+        'Name must be less than 20 characters long. Please try again.'
+      );
       return false;
     } else {
-      setFormErrors((errors) => ({ ...errors, username: '' }));
+      setFormErrors((errors) => ({ ...errors, name: '' }));
       return true;
     }
   };
@@ -59,6 +88,9 @@ function RegisterForm() {
         password:
           'Password must be at least 6 characters long and contain at least one letter and one number. Please try again.',
       }));
+      toast.error(
+        'Password must be at least 6 characters long and contain at least one letter and one number. Please try again.'
+      );
       return false;
     } else {
       setFormErrors((errors) => ({
@@ -78,6 +110,7 @@ function RegisterForm() {
         ...errors,
         confirmPassword: 'Passwords do not match',
       }));
+      toast.error('Passwords do not match');
       return false;
     } else {
       setFormErrors((errors) => ({
@@ -91,12 +124,18 @@ function RegisterForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const isUsernameValid = validateUsername(username);
+    const isUsernameValid = validateUsername(name);
     const isPasswordValid = validatePassword(password);
     const doPasswordsMatch = validateConfirmPassword(password, confirmPassword);
 
     if (isUsernameValid && isPasswordValid && doPasswordsMatch) {
-      // Add code to submit the form
+      const userData = {
+        name,
+        email,
+        password,
+      };
+
+      dispatch(register(userData));
     }
   };
 
@@ -113,12 +152,12 @@ function RegisterForm() {
             <input
               type="text"
               placeholder="Username"
-              value={username}
-              name="username"
+              value={name}
+              name="name"
               onChange={handleDataChange}
               required
               className={`block w-full rounded-md border border-gray-200 bg-white py-2.5 px-6 text-sm shadow-lg font-satoshi font-medium focus:border-black focus:outline-none focus:ring-0 peer ${
-                formErrors.username && 'border-red-500'
+                formErrors.name && 'border-red-500'
               }`}
             />
             <input
@@ -154,8 +193,8 @@ function RegisterForm() {
                   : 'border-gray-200'
               }}`}
             />
-            {formErrors.username && (
-              <p className="text-sm text-red-500">{formErrors.username}</p>
+            {formErrors.name && (
+              <p className="text-sm text-red-500">{formErrors.name}</p>
             )}
             {formErrors.password && (
               <p className="text-sm text-red-500">{formErrors.password}</p>
