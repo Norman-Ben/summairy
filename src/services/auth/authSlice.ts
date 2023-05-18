@@ -45,6 +45,28 @@ export const register = createAsyncThunk<
   }
 });
 
+// Login user
+export const login = createAsyncThunk<
+  User,
+  User,
+  { rejectValue: { message: string } }
+>('auth/login', async (user, thunkAPI) => {
+  try {
+    return await authService.login(user);
+  } catch (error) {
+    const err = error as ErrorWithResponse;
+    const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+    return thunkAPI.rejectWithValue({ message });
+  }
+});
+
+export const logout = createAsyncThunk('auth/logout', async () => {
+  authService.logout();
+});
+
 export const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -70,6 +92,23 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload?.message || 'Something went wrong';
+        state.user = null;
+      })
+      .addCase(login.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(login.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.user = action.payload;
+      })
+      .addCase(login.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload?.message || 'Something went wrong';
+        state.user = null;
+      })
+      .addCase(logout.fulfilled, (state) => {
         state.user = null;
       });
   },

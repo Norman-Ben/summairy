@@ -1,5 +1,11 @@
 import { useState, useEffect } from 'react';
 import { FaSignInAlt } from 'react-icons/fa';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { login, reset } from '../services/auth/authSlice';
+import { AppDispatch } from '../services/store';
+import LoadingSpinner from './LoadingSpinner';
 
 type FormDataTypes = {
   email: string;
@@ -14,6 +20,25 @@ function LoginForm() {
 
   const { email, password } = formData;
 
+  const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { isFetching, isSuccess, isError, errorMessage, user } = useSelector(
+    (state: any) => state.auth
+  );
+
+  useEffect(() => {
+    if (isSuccess || user) {
+      dispatch(reset());
+      navigate('/');
+    }
+
+    if (isError) {
+      dispatch(reset());
+      toast.error(errorMessage);
+    }
+  }, [isSuccess, isError, user, errorMessage, dispatch, navigate]);
+
   const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -21,8 +46,15 @@ function LoginForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Add code to submit the form
+    const userData = {
+      email,
+      password,
+    };
+
+    dispatch(login(userData));
   };
+
+  if (isFetching) return <LoadingSpinner />;
 
   return (
     <>
