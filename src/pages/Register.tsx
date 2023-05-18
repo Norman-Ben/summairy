@@ -1,5 +1,13 @@
+import NavBar from '../components/NavBar';
+import RegisterForm from '../components/RegisterForm';
+
 function Register() {
-  return <div>Register</div>;
+  return (
+    <>
+      <NavBar />
+      <RegisterForm />
+    </>
+  );
 }
 
 export default Register;
