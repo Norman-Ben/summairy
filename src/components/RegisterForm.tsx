@@ -5,7 +5,6 @@ import { toast } from 'react-toastify';
 import { register, reset } from '../services/auth/authSlice';
 import { AppDispatch } from '../services/store';
 import { FaUser } from 'react-icons/fa';
-import LoadingSpinner from './LoadingSpinner';
 
 type FormDataTypes = {
   name: string;
@@ -138,10 +137,6 @@ function RegisterForm() {
       dispatch(register(userData));
     }
   };
-
-  if (isFetching) {
-    return <LoadingSpinner />;
-  }
 
   return (
     <>

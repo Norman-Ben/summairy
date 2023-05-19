@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { login, reset } from '../services/auth/authSlice';
 import { AppDispatch } from '../services/store';
-import LoadingSpinner from './LoadingSpinner';
 
 type FormDataTypes = {
   email: string;
@@ -53,8 +52,6 @@ function LoginForm() {
 
     dispatch(login(userData));
   };
-
-  if (isFetching) return <LoadingSpinner />;
 
   return (
     <>

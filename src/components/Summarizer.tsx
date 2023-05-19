@@ -3,14 +3,17 @@ import link from '../assets/link.svg';
 import copy from '../assets/copy.svg';
 import loader from '../assets/loader.svg';
 import tick from '../assets/tick.svg';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../services/store';
 import { useLazyGetSummaryQuery } from '../services/article/articleService';
+import { addArticle } from '../services/article/articleSlice';
 
 type ArticleType = {
   url: string;
   summary: string;
 };
 
-const Demo = () => {
+const Summarizer = () => {
   const [article, setArticle] = useState<ArticleType>({
     url: '',
     summary: '',
@@ -52,6 +55,15 @@ const Demo = () => {
     setTimeout(() => setCopied(''), 3000);
   };
 
+  const dispatch = useDispatch<AppDispatch>();
+
+  const handleAddArticle = (article: ArticleType) => {
+    return () => {
+      dispatch(addArticle(article));
+      console.log('article added');
+    };
+  };
+
   return (
     <section className="mt-16 w-full max-w-xl">
       <div className="flex flex-col w-full gap-2">
@@ -88,6 +100,16 @@ const Demo = () => {
             >
               <div
                 className="w-7 h-7 rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur flex justify-center items-center cursor-pointer"
+                onClick={handleAddArticle(article)}
+              >
+                <img
+                  src={copied === article.url ? tick : copy}
+                  alt="copy_icon"
+                  className="w-[40%] h-[40%] object-contain"
+                />
+              </div>
+              <div
+                className="w-7 h-7 rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur flex justify-center items-center cursor-pointer"
                 onClick={() => handleCopy(article.url)}
               >
                 <img
@@ -108,8 +130,8 @@ const Demo = () => {
           <img src={loader} alt="loader" className="w-20 h-20 object-contain" />
         ) : error ? (
           <p className="font-inter font-bold text-black text-center">
-            An error has occurred when trying to fetch the summary from our AI.
-            Please try again later.
+            An error has occurred when trying to fetch the summary from our AI
+            service. Please try again later.
             <br />
             <span className="font-satoshi font-normal text-grey-700">
               {error?.data?.error}
@@ -137,4 +159,5 @@ const Demo = () => {
   );
 };
 
-export default Demo;
+export default Summarizer;
+export type { ArticleType };
