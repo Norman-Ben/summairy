@@ -3,7 +3,7 @@ import link from '../assets/link.svg';
 import copy from '../assets/copy.svg';
 import loader from '../assets/loader.svg';
 import tick from '../assets/tick.svg';
-import { useLazyGetSummaryQuery } from '../services/article';
+import { useLazyGetSummaryQuery } from '../services/article/articleService';
 
 type ArticleType = {
   url: string;

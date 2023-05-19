@@ -18,7 +18,9 @@ function NavBar() {
   return (
     <>
       <nav className="flex justify-between items-center w-full mb-10 pt-3">
-        <img src={logo} alt="Summairy Logo" className="w-24 object-contain" />
+        <button type="button" onClick={() => navigate('/')}>
+          <img src={logo} alt="Summairy Logo" className="w-24 object-contain" />
+        </button>
         <div className="flex gap-3">
           {user ? (
             <button onClick={onLogout}>
