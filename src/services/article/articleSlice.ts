@@ -37,6 +37,24 @@ export const addArticle = createAsyncThunk(
   }
 );
 
+//Get Users Articles
+export const getArticles = createAsyncThunk(
+  'article/getArticles',
+  async (_, thunkAPI) => {
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await articleService.getArticles(token);
+    } catch (error) {
+      const err = error as ErrorWithResponse;
+      const message =
+        (err.response && err.response.data && err.response.data.message) ||
+        err.message ||
+        err.toString();
+      return thunkAPI.rejectWithValue({ message });
+    }
+  }
+);
+
 export const articleSlice = createSlice({
   name: 'article',
   initialState,
@@ -45,6 +63,7 @@ export const articleSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
+      // Add article reducers
       .addCase(addArticle.pending, (state) => {
         state.isError = false;
         state.isSuccess = false;
@@ -60,7 +79,27 @@ export const articleSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+
+      // Get articles reducers
+      .addCase(getArticles.pending, (state) => {
+        state.isError = false;
+        state.isSuccess = false;
+        state.isLoading = true;
+        state.message = '';
+      })
+      .addCase(getArticles.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.articles = action.payload;
+      })
+      .addCase(getArticles.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
       });
+
+    // Reset reducers
   },
 });
 

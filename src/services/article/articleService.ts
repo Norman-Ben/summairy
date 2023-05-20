@@ -41,8 +41,26 @@ const addArticle = async (article, token) => {
   }
 };
 
+//Get Users Articles
+const getArticles = async (token) => {
+  const config = {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await fetch(API_URL, config);
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  } else {
+    return Promise.reject(data);
+  }
+};
+
 const articleService = {
   addArticle,
+  getArticles,
 };
 export const { useLazyGetSummaryQuery } = articleApi;
 export default articleService;
