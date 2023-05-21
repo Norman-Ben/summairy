@@ -25,10 +25,14 @@ const login = async (userData) => {
     },
     body: JSON.stringify(userData),
   });
-  const data = await response.json();
-  if (response.ok) {
-    localStorage.setItem('user', JSON.stringify(data));
+
+  if (!response.ok) {
+    throw new Error('Login failed');
   }
+
+  const data = await response.json();
+  localStorage.setItem('user', JSON.stringify(data));
+
   return data;
 };
 

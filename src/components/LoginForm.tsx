@@ -18,7 +18,7 @@ function LoginForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { isFetching, isSuccess, isError, errorMessage, user } = useSelector(
+  const { isSuccess, isError, message, user } = useSelector(
     (state: any) => state.auth
   );
 
@@ -30,9 +30,9 @@ function LoginForm() {
 
     if (isError) {
       dispatch(reset());
-      toast.error(errorMessage);
+      toast.error(message);
     }
-  }, [isSuccess, isError, user, errorMessage, dispatch, navigate]);
+  }, [isSuccess, isError, user, message, dispatch, navigate]);
 
   const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -46,7 +46,9 @@ function LoginForm() {
       password,
     };
 
-    dispatch(login(userData));
+    dispatch(login(userData)).catch((err) => {
+      console.log(err);
+    });
   };
 
   return (
