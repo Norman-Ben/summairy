@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import articleService from './articleService';
-import { ArticleType } from '../../components/Summarizer';
+import { ArticleType } from '../../types/SummarizerTypes';
 
 //Error interface
 interface ErrorWithResponse extends Error {

@@ -5,16 +5,10 @@ import { toast } from 'react-toastify';
 import { register, reset } from '../services/auth/authSlice';
 import { AppDispatch } from '../services/store';
 import { FaUser } from 'react-icons/fa';
-
-type FormDataTypes = {
-  name: string;
-  email: string;
-  password: string;
-  confirmPassword: string;
-};
+import { RegisterFormDataTypes } from '../types/SummarizerTypes';
 
 function RegisterForm() {
-  const [formData, setFormData] = useState<FormDataTypes>({
+  const [formData, setFormData] = useState<RegisterFormDataTypes>({
     name: '',
     email: '',
     password: '',
@@ -140,12 +134,12 @@ function RegisterForm() {
 
   return (
     <>
-      <section className="flex flex-col items-center justify-start w-full h-screen">
-        <div className="flex flex-col items-center justify-center w-full max-w-md p-4 bg-white rounded-xl shadow-lg">
-          <FaUser className="w-16 h-16 text-black" />
+      <section className="flex h-screen w-full flex-col items-center justify-start">
+        <div className="flex w-full max-w-md flex-col items-center justify-center rounded-xl bg-white p-4 shadow-lg">
+          <FaUser className="h-16 w-16 text-black" />
           <h1 className="mt-4 text-2xl font-bold text-black">Sign Up</h1>
           <form
-            className="flex flex-col w-full mt-4 gap-3"
+            className="mt-4 flex w-full flex-col gap-3"
             onSubmit={handleSubmit}
           >
             <input
@@ -155,7 +149,7 @@ function RegisterForm() {
               name="name"
               onChange={handleDataChange}
               required
-              className={`block w-full rounded-md border border-gray-200 bg-white py-2.5 px-6 text-sm shadow-lg font-satoshi font-medium focus:border-black focus:outline-none focus:ring-0 peer ${
+              className={`peer block w-full rounded-md border border-gray-200 bg-white px-6 py-2.5 font-satoshi text-sm font-medium shadow-lg focus:border-black focus:outline-none focus:ring-0 ${
                 formErrors.name && 'border-red-500'
               }`}
             />
@@ -166,7 +160,7 @@ function RegisterForm() {
               name="email"
               onChange={handleDataChange}
               required
-              className="block w-full rounded-md border border-gray-200 bg-white py-2.5 px-6 text-sm shadow-lg font-satoshi font-medium focus:border-black focus:outline-none focus:ring-0 peer"
+              className="peer block w-full rounded-md border border-gray-200 bg-white px-6 py-2.5 font-satoshi text-sm font-medium shadow-lg focus:border-black focus:outline-none focus:ring-0"
             />
             <input
               type="password"
@@ -175,7 +169,7 @@ function RegisterForm() {
               name="password"
               onChange={handleDataChange}
               required
-              className={`block w-full rounded-md border border-gray-200 bg-white py-2.5 px-6 text-sm shadow-lg font-satoshi font-medium focus:border-black focus:outline-none focus:ring-0 peer ${
+              className={`peer block w-full rounded-md border border-gray-200 bg-white px-6 py-2.5 font-satoshi text-sm font-medium shadow-lg focus:border-black focus:outline-none focus:ring-0 ${
                 formErrors.password ? 'border-red-500' : 'border-gray-200'
               }}`}
             />
@@ -186,7 +180,7 @@ function RegisterForm() {
               name="confirmPassword"
               onChange={handleDataChange}
               required
-              className={`block w-full rounded-md border bg-white py-2.5 px-6 text-sm shadow-lg font-satoshi font-medium focus:border-black focus:outline-none focus:ring-0 peer ${
+              className={`peer block w-full rounded-md border bg-white px-6 py-2.5 font-satoshi text-sm font-medium shadow-lg focus:border-black focus:outline-none focus:ring-0 ${
                 formErrors.confirmPassword
                   ? 'border-red-500'
                   : 'border-gray-200'
@@ -206,7 +200,7 @@ function RegisterForm() {
 
             <button
               type="submit"
-              className="w-full py-2 mt-4 text-sm font-medium text-white uppercase bg-black rounded-md shadow-lg peer-focus:ring-2 focus:ring-2 focus:ring-black"
+              className="mt-4 w-full rounded-md bg-black py-2 text-sm font-medium uppercase text-white shadow-lg focus:ring-2 focus:ring-black peer-focus:ring-2"
             >
               Register
             </button>

@@ -1,11 +1,19 @@
 import { useEffect } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import loader from '../assets/loader.svg';
+import { ArticleType } from '../types/SummarizerTypes';
 import { getArticles, reset } from '../services/article/articleSlice';
 
 function MySummaries() {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+
+  const [article, setArticle] = useState<ArticleType>({
+    url: '',
+    summary: '',
+  });
+
   const { articles, isLoading, isError, message } = useSelector(
     (state) => state.article
   );
@@ -62,6 +70,7 @@ function MySummaries() {
         {articles.map((article: ArticleType, index: number) => (
           <div
             key={`link-${index}`}
+            onClick={() => setArticle(article)}
             className="flex cursor-pointer flex-row items-center justify-start gap-3 rounded-lg border border-gray-200 bg-white p-3"
           >
             <div className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur">
@@ -85,7 +94,9 @@ function MySummaries() {
             </span>
           </h2>
           <div className="rounded-xl border border-gray-200 bg-white/20 p-4 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur">
-            <p className="font-inter text-sm font-medium text-gray-700"></p>
+            <p className="font-inter text-sm font-medium text-gray-700">
+              {article.summary}
+            </p>
           </div>
         </div>
       </div>

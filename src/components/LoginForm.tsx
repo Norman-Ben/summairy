@@ -5,14 +5,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { login, reset } from '../services/auth/authSlice';
 import { AppDispatch } from '../services/store';
-
-type FormDataTypes = {
-  email: string;
-  password: string;
-};
+import { LoginFormDataTypes } from '../types/SummarizerTypes';
 
 function LoginForm() {
-  const [formData, setFormData] = useState<FormDataTypes>({
+  const [formData, setFormData] = useState<LoginFormDataTypes>({
     email: '',
     password: '',
   });
@@ -55,12 +51,12 @@ function LoginForm() {
 
   return (
     <>
-      <section className="flex flex-col items-center justify-start w-full h-screen">
-        <div className="flex flex-col items-center justify-center w-full max-w-md p-4 bg-white rounded-xl shadow-lg">
-          <FaSignInAlt className="w-16 h-16 text-black" />
+      <section className="flex h-screen w-full flex-col items-center justify-start">
+        <div className="flex w-full max-w-md flex-col items-center justify-center rounded-xl bg-white p-4 shadow-lg">
+          <FaSignInAlt className="h-16 w-16 text-black" />
           <h1 className="mt-4 text-2xl font-bold text-black">Login</h1>
           <form
-            className="flex flex-col w-full mt-4 gap-3"
+            className="mt-4 flex w-full flex-col gap-3"
             onSubmit={handleSubmit}
           >
             <input
@@ -70,7 +66,7 @@ function LoginForm() {
               name="email"
               onChange={handleDataChange}
               required
-              className="block w-full rounded-md border border-gray-200 bg-white py-2.5 px-6 text-sm shadow-lg font-satoshi font-medium focus:border-black focus:outline-none focus:ring-0 peer"
+              className="peer block w-full rounded-md border border-gray-200 bg-white px-6 py-2.5 font-satoshi text-sm font-medium shadow-lg focus:border-black focus:outline-none focus:ring-0"
             />
             <input
               type="password"
@@ -79,12 +75,12 @@ function LoginForm() {
               name="password"
               onChange={handleDataChange}
               required
-              className={`block w-full rounded-md border border-gray-200 bg-white py-2.5 px-6 text-sm shadow-lg font-satoshi font-medium focus:border-black focus:outline-none focus:ring-0 peer`}
+              className={`peer block w-full rounded-md border border-gray-200 bg-white px-6 py-2.5 font-satoshi text-sm font-medium shadow-lg focus:border-black focus:outline-none focus:ring-0`}
             />
 
             <button
               type="submit"
-              className="w-full py-2 mt-4 text-sm font-medium text-white uppercase bg-black rounded-md shadow-lg peer-focus:ring-2 focus:ring-2 focus:ring-black"
+              className="mt-4 w-full rounded-md bg-black py-2 text-sm font-medium uppercase text-white shadow-lg focus:ring-2 focus:ring-black peer-focus:ring-2"
             >
               Login
             </button>

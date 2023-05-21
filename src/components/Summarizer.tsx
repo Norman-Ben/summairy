@@ -8,11 +8,7 @@ import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../services/store';
 import { useLazyGetSummaryQuery } from '../services/article/articleService';
 import { addArticle } from '../services/article/articleSlice';
-
-type ArticleType = {
-  url: string;
-  summary: string;
-};
+import { ArticleType } from '../types/SummarizerTypes';
 
 const Summarizer = () => {
   const [article, setArticle] = useState<ArticleType>({
@@ -174,4 +170,3 @@ const Summarizer = () => {
 };
 
 export default Summarizer;
-export type { ArticleType };
