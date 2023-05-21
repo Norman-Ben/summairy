@@ -58,9 +58,27 @@ const getArticles = async (token) => {
   }
 };
 
+// Delete user Article
+const deleteArticle = async (articleId, token) => {
+  const config = {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  };
+  const response = await fetch(`${API_URL}/${articleId}`, config);
+  const data = await response.json();
+  if (response.ok) {
+    return data;
+  } else {
+    return Promise.reject(data);
+  }
+};
+
 const articleService = {
   addArticle,
   getArticles,
+  deleteArticle,
 };
 export const { useLazyGetSummaryQuery } = articleApi;
 export default articleService;

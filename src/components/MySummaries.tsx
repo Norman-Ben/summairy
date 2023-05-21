@@ -2,8 +2,13 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import loader from '../assets/loader.svg';
+import bin from '../assets/delete.svg';
 import { ArticleType } from '../types/SummarizerTypes';
-import { getArticles, reset } from '../services/article/articleSlice';
+import {
+  getArticles,
+  deleteArticle,
+  reset,
+} from '../services/article/articleSlice';
 
 function MySummaries() {
   const dispatch = useDispatch();
@@ -17,6 +22,8 @@ function MySummaries() {
   const { articles, isLoading, isError, message } = useSelector(
     (state) => state.article
   );
+
+  console.log(articles);
 
   useEffect(() => {
     if (user) {
@@ -73,8 +80,18 @@ function MySummaries() {
             onClick={() => setArticle(article)}
             className="flex cursor-pointer flex-row items-center justify-start gap-3 rounded-lg border border-gray-200 bg-white p-3"
           >
-            <div className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur">
-              <img alt="copy_icon" className="h-[40%] w-[40%] object-contain" />
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch(deleteArticle(article.id));
+              }}
+              className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur"
+            >
+              <img
+                src={bin}
+                alt="copy_icon"
+                className="h-[40%] w-[40%] object-contain"
+              />
             </div>
             <div className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur">
               <img alt="copy_icon" className="h-[40%] w-[40%] object-contain" />
