@@ -3,6 +3,8 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import loader from '../assets/loader.svg';
 import bin from '../assets/delete.svg';
+import copy from '../assets/copy.svg';
+import tick from '../assets/tick.svg'
 import { ArticleType } from '../types/SummarizerTypes';
 import {
   getArticles,
@@ -19,11 +21,17 @@ function MySummaries() {
     summary: '',
   });
 
+  const [ copied, setCopied ] = useState('');
+
   const { articles, isLoading, isError, message } = useSelector(
     (state) => state.article
   );
 
-  console.log(articles);
+  const handleCopy = (copyUrl: string) => {
+    setCopied(copyUrl);
+    navigator.clipboard.writeText(copyUrl);
+    setTimeout(() => setCopied(''), 3000);
+  };
 
   useEffect(() => {
     if (user) {
@@ -35,7 +43,7 @@ function MySummaries() {
     };
   }, [dispatch, user]);
 
-  // Loding spinner if in loading state
+  // Loading spinner if in loading state
   if (isLoading) {
     return (
       <div className="flex min-w-full flex-col gap-3">
@@ -93,8 +101,9 @@ function MySummaries() {
                 className="h-[40%] w-[40%] object-contain"
               />
             </div>
-            <div className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur">
-              <img alt="copy_icon" className="h-[40%] w-[40%] object-contain" />
+            <div className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur"
+            onClick={() => handleCopy}>
+              <img src={copied === article.url ? tick : copy} alt="copy_icon" className="h-[40%] w-[40%] object-contain"/>
             </div>
             <p className="flex-1 truncate font-satoshi text-sm font-medium text-blue-700">
               {article.url}
@@ -102,7 +111,7 @@ function MySummaries() {
           </div>
         ))}
       </div>
-      <div className="my-10 flex min-w-full items-center justify-center">
+      {article.summary && (<div className="my-10 flex min-w-full items-center justify-center">
         <div className="flex flex-col gap-3">
           <h2 className="font-satoshi text-xl font-bold text-gray-600">
             Article{' '}
@@ -116,7 +125,7 @@ function MySummaries() {
             </p>
           </div>
         </div>
-      </div>
+      </div>)}
     </div>
   );
 }
