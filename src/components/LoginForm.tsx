@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { login, reset } from '../services/auth/authSlice';
-import { AppDispatch } from '../services/store';
+import { AppDispatch, RootState } from '../services/store';
 import { LoginFormDataTypes } from '../types/SummarizerTypes';
 
 function LoginForm() {
@@ -19,7 +19,7 @@ function LoginForm() {
   const dispatch = useDispatch<AppDispatch>();
 
   const { isSuccess, isError, message, user } = useSelector(
-    (state: any) => state.auth
+    (state: RootState) => state.auth
   );
 
   useEffect(() => {

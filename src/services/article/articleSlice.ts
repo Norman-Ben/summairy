@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import articleService from './articleService';
 import { ArticleType } from '../../types/SummarizerTypes';
+import { RootState } from '../store';
 
 //Error interface
 interface ErrorWithResponse extends Error {
@@ -20,65 +21,82 @@ const initialState = {
 };
 
 //Add New Article
-export const addArticle = createAsyncThunk(
-  'article/addArticle',
-  async (article: ArticleType, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await articleService.addArticle(article, token);
-    } catch (error) {
-      const err = error as ErrorWithResponse;
-      const message =
-        (err.response && err.response.data && err.response.data.message) ||
-        err.message ||
-        err.toString();
-      return thunkAPI.rejectWithValue({ message });
-    }
+export const addArticle = createAsyncThunk<
+  string, // The type of the return value
+  ArticleType, // The type of the argument
+  {
+    rejectValue: string;
+    state: RootState;
   }
-);
+>('article/addArticle', async (article: ArticleType, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await articleService.addArticle(article, token);
+  } catch (error) {
+    const err = error as ErrorWithResponse;
+    const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 //Get Users Articles
-export const getArticles = createAsyncThunk(
-  'article/getArticles',
-  async (_, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      return await articleService.getArticles(token);
-    } catch (error) {
-      const err = error as ErrorWithResponse;
-      const message =
-        (err.response && err.response.data && err.response.data.message) ||
-        err.message ||
-        err.toString();
-      return thunkAPI.rejectWithValue({ message });
-    }
+export const getArticles = createAsyncThunk<
+  [], // The type of the return value
+  ArticleType, // The type of the argument
+  {
+    rejectValue: string;
+    state: RootState;
   }
-);
+>('article/getArticles', async (_, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    return await articleService.getArticles(token);
+  } catch (error) {
+    const err = error as ErrorWithResponse;
+    const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 //Delete user Article
-export const deleteArticle = createAsyncThunk(
-  'article/deleteArticle',
-  async (id, thunkAPI) => {
-    try {
-      const token = thunkAPI.getState().auth.user.token;
-      await articleService.deleteArticle(id, token);
-      return id;
-    } catch (error) {
-      const err = error as ErrorWithResponse;
-      const message =
-        (err.response && err.response.data && err.response.data.message) ||
-        err.message ||
-        err.toString();
-      return thunkAPI.rejectWithValue({ message });
-    }
+export const deleteArticle = createAsyncThunk<
+  number, // The type of the return value
+  number, // The type of the argument
+  {
+    rejectValue: string;
+    state: RootState;
   }
-);
+>('article/deleteArticle', async (id, thunkAPI) => {
+  try {
+    const token = thunkAPI.getState().auth.user.token;
+    await articleService.deleteArticle(id, token);
+    return id;
+  } catch (error) {
+    const err = error as ErrorWithResponse;
+    const message =
+      (err.response && err.response.data && err.response.data.message) ||
+      err.message ||
+      err.toString();
+    return thunkAPI.rejectWithValue(message);
+  }
+});
 
 export const articleSlice = createSlice({
   name: 'article',
   initialState,
   reducers: {
-    reset: (state) => initialState,
+    reset: (state) => {
+      state.isError = false;
+      state.isSuccess = false;
+      state.isLoading = false;
+      state.message = '';
+    },
   },
   extraReducers: (builder) => {
     builder

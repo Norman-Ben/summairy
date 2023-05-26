@@ -14,6 +14,7 @@ export type RegisterFormDataTypes = {
 };
 
 export type LoginFormDataTypes = {
+  name?: string;
   email: string;
   password: string;
 };

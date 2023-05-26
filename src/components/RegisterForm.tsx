@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { register, reset } from '../services/auth/authSlice';
-import { AppDispatch } from '../services/store';
+import { AppDispatch, RootState } from '../services/store';
 import { FaUser } from 'react-icons/fa';
 import { RegisterFormDataTypes } from '../types/SummarizerTypes';
 
@@ -26,8 +26,8 @@ function RegisterForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const { isFetching, isSuccess, isError, errorMessage, user } = useSelector(
-    (state: any) => state.auth
+  const { isSuccess, isError, message, user } = useSelector(
+    (state: RootState) => state.auth
   );
 
   useEffect(() => {
@@ -38,9 +38,9 @@ function RegisterForm() {
 
     if (isError) {
       dispatch(reset());
-      toast.error(errorMessage);
+      toast.error(message);
     }
-  }, [isSuccess, isError, user, errorMessage, dispatch, navigate]);
+  }, [isSuccess, isError, user, message, dispatch, navigate]);
 
   const handleDataChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });

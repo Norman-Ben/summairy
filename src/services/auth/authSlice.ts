@@ -10,7 +10,7 @@ interface ErrorWithResponse extends Error {
 }
 
 type User = {
-  name: string;
+  name?: string;
   email: string;
   password: string;
 };

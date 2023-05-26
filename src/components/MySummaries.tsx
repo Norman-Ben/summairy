@@ -36,7 +36,7 @@ function MySummaries() {
 
   useEffect(() => {
     if (user) {
-      dispatch(getArticles());
+      dispatch(getArticles(user.token));
     }
 
     return () => {

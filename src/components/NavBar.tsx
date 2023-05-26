@@ -1,14 +1,15 @@
 import logo from '../assets/logo.svg';
 import NavButton from './NavButton';
 import { FaSignOutAlt, FaSignInAlt, FaUser } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout, reset } from '../services/auth/authSlice';
+import { RootState, AppDispatch } from '../services/store';
 
 function NavBar() {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootState) => state.auth);
   const onLogout = () => {
     dispatch(logout());
     dispatch(reset());
@@ -17,7 +18,7 @@ function NavBar() {
 
   return (
     <>
-      <nav className="flex justify-between items-center w-full mb-10 pt-3">
+      <nav className="mb-10 flex w-full items-center justify-between pt-3">
         <button type="button" onClick={() => navigate('/')}>
           <img src={logo} alt="Summairy Logo" className="w-24 object-contain" />
         </button>
