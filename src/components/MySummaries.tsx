@@ -4,8 +4,9 @@ import { useSelector, useDispatch } from 'react-redux';
 import loader from '../assets/loader.svg';
 import bin from '../assets/delete.svg';
 import copy from '../assets/copy.svg';
-import tick from '../assets/tick.svg'
+import tick from '../assets/tick.svg';
 import { ArticleType } from '../types/SummarizerTypes';
+import { RootState, AppDispatch } from '../services/store';
 import {
   getArticles,
   deleteArticle,
@@ -13,18 +14,18 @@ import {
 } from '../services/article/articleSlice';
 
 function MySummaries() {
-  const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch<AppDispatch>();
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const [article, setArticle] = useState<ArticleType>({
     url: '',
     summary: '',
   });
 
-  const [ copied, setCopied ] = useState('');
+  const [copied, setCopied] = useState('');
 
-  const { articles, isLoading, isError, message } = useSelector(
-    (state) => state.article
+  const { articles, isLoading } = useSelector(
+    (state: RootState) => state.article
   );
 
   const handleCopy = (copyUrl: string) => {
@@ -101,9 +102,15 @@ function MySummaries() {
                 className="h-[40%] w-[40%] object-contain"
               />
             </div>
-            <div className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur"
-            onClick={() => handleCopy}>
-              <img src={copied === article.url ? tick : copy} alt="copy_icon" className="h-[40%] w-[40%] object-contain"/>
+            <div
+              className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur"
+              onClick={() => handleCopy}
+            >
+              <img
+                src={copied === article.url ? tick : copy}
+                alt="copy_icon"
+                className="h-[40%] w-[40%] object-contain"
+              />
             </div>
             <p className="flex-1 truncate font-satoshi text-sm font-medium text-blue-700">
               {article.url}
@@ -111,21 +118,23 @@ function MySummaries() {
           </div>
         ))}
       </div>
-      {article.summary && (<div className="my-10 flex min-w-full items-center justify-center">
-        <div className="flex flex-col gap-3">
-          <h2 className="font-satoshi text-xl font-bold text-gray-600">
-            Article{' '}
-            <span className="bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 bg-clip-text text-transparent">
-              Summary
-            </span>
-          </h2>
-          <div className="rounded-xl border border-gray-200 bg-white/20 p-4 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur">
-            <p className="font-inter text-sm font-medium text-gray-700">
-              {article.summary}
-            </p>
+      {article.summary && (
+        <div className="my-10 flex min-w-full items-center justify-center">
+          <div className="flex flex-col gap-3">
+            <h2 className="font-satoshi text-xl font-bold text-gray-600">
+              Article{' '}
+              <span className="bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 bg-clip-text text-transparent">
+                Summary
+              </span>
+            </h2>
+            <div className="rounded-xl border border-gray-200 bg-white/20 p-4 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur">
+              <p className="font-inter text-sm font-medium text-gray-700">
+                {article.summary}
+              </p>
+            </div>
           </div>
         </div>
-      </div>)}
+      )}
     </div>
   );
 }

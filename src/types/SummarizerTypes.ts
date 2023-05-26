@@ -3,6 +3,7 @@ import { IconType } from 'react-icons';
 export type ArticleType = {
   url: string;
   summary: string;
+  id?: number;
 };
 
 export type RegisterFormDataTypes = {
