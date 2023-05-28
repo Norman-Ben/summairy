@@ -57,12 +57,9 @@ const Summarizer = () => {
 
   const handleAddArticle = (article: ArticleType) => {
     return () => {
-      const key = allArticles.findIndex((a) => a.url === article.url);
-
       setAdded(article.url);
       dispatch(addArticle(article));
 
-      localStorage.removeItem(key);
       const updatedAllArticles = allArticles.filter(
         (a) => a.url !== article.url
       );
@@ -143,9 +140,6 @@ const Summarizer = () => {
             An error has occurred when trying to fetch the summary from our AI
             service. Please try again later.
             <br />
-            <span className="text-grey-700 font-satoshi font-normal">
-              {error?.data?.error}
-            </span>
           </p>
         ) : (
           article.summary && (
