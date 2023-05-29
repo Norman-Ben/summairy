@@ -9,6 +9,8 @@ import { AppDispatch } from '../services/store';
 import { useLazyGetSummaryQuery } from '../services/article/articleService';
 import { addArticle } from '../services/article/articleSlice';
 import { ArticleType } from '../types/SummarizerTypes';
+import { useSelector } from 'react-redux';
+import { RootState } from '../services/store';
 
 const Summarizer = () => {
   const [article, setArticle] = useState<ArticleType>({
@@ -54,6 +56,8 @@ const Summarizer = () => {
   };
 
   const dispatch = useDispatch<AppDispatch>();
+
+  const { user } = useSelector((state: RootState) => state.auth);
 
   const handleAddArticle = (article: ArticleType) => {
     return () => {
@@ -105,16 +109,20 @@ const Summarizer = () => {
               onClick={() => setArticle(article)}
               className="flex cursor-pointer flex-row items-center justify-start gap-3 rounded-lg border border-gray-200 bg-white p-3"
             >
-              <div
-                className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur"
-                onClick={handleAddArticle(article)}
-              >
-                <img
-                  src={added === article.url ? tick : add}
-                  alt="copy_icon"
-                  className="h-[40%] w-[40%] object-contain"
-                />
-              </div>
+              {user && (
+                <div
+                  className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur"
+                  onClick={handleAddArticle(article)}
+                >
+                  {
+                    <img
+                      src={added === article.url ? tick : add}
+                      alt="copy_icon"
+                      className="h-[40%] w-[40%] object-contain"
+                    />
+                  }
+                </div>
+              )}
               <div
                 className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-full bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur"
                 onClick={() => handleCopy(article.url)}

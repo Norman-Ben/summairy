@@ -62,7 +62,7 @@ function MySummaries() {
   }
 
   return (
-    <div className="flex w-full max-w-xl  flex-col gap-3">
+    <div className="flex w-full max-w-xl flex-col gap-3">
       <h2 className="font-satoshi text-xl font-bold text-gray-600">
         My Saved{' '}
         <span className="bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 bg-clip-text text-transparent">
@@ -71,12 +71,6 @@ function MySummaries() {
       </h2>
 
       <div className="flex max-h-60 flex-col gap-1 overflow-y-auto">
-        {!user && (
-          <p className="font-inter text-sm font-medium text-gray-700">
-            Please login or register for an account to save, edit or delete your
-            summaries.
-          </p>
-        )}
         {articles.length === 0 && user && (
           <p className="font-inter text-sm font-medium text-gray-700">
             You have no article summaries yet. Please add one using the "+"
@@ -135,6 +129,7 @@ function MySummaries() {
           </div>
         </div>
       )}
+      <div className="align-center my-10"> </div>
     </div>
   );
 }
