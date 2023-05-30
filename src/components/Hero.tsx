@@ -5,7 +5,6 @@ import { RootState } from '../services/store';
 const Hero = () => {
   const { user } = useSelector((state: RootState) => state.auth);
 
-  console.log(user);
   return (
     <header className="flex w-full flex-col items-center justify-center">
       <NavBar />
